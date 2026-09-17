@@ -27,7 +27,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-
   build:
     name: Build
     needs: test
@@ -50,37 +49,36 @@ jobs:
           name: website-build
           path: build/
 
-
   deploy:
-  name: Deploy to AWS
-  needs: build
-  runs-on: ubuntu-latest
+    name: Deploy to AWS
+    needs: build
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-    - name: Download build artifact
-      uses: actions/download-artifact@v5
-      with:
-        name: website-build
-        path: build
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: website-build
+          path: build
 
-    - name: Debug OIDC token
-      uses: github/actions-oidc-debugger@main
+      - name: Debug OIDC token
+        uses: github/actions-oidc-debugger@main
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v5
-      with:
-        role-to-assume: arn:aws:iam::953216549657:role/GitHubActionsDevOpsDeploymentRole
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::953216549657:role/GitHubActionsDevOpsDeploymentRole
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Deploy website to S3
-      run: |
-        aws s3 sync build/ s3://${{ env.S3_BUCKET }}/ --delete
+      - name: Deploy website to S3
+        run: |
+          aws s3 sync build/ s3://${{ env.S3_BUCKET }}/ --delete
 
-    - name: Invalidate CloudFront cache
-      run: |
-        aws cloudfront create-invalidation \
-          --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-          --paths "/*"
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
