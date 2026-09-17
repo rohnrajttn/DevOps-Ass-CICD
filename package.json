@@ -1,0 +1,8 @@
+{
+  "name": "devops-cicd-website",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node -e \"console.log('Test passed')\"",
+    "start": "node index.js"
+  }
+}
