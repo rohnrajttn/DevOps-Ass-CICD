@@ -69,7 +69,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::953216549657:user/devOps-ass-user
+          role-to-assume: arn:aws:iam::953216549657:user/devOps-ass-user/GitHubActionsDevOpsDeploymentRole
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy website to S3
